@@ -1,0 +1,3 @@
+[flake8]
+per-file-ignores =
+    ecommerce/settings.py: E501
