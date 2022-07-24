@@ -6,6 +6,20 @@ class Product(models.Model):
     price = models.FloatField()
     stock = models.IntegerField()
 
+    def check_stock(self, quantity):
+        """
+        Checks if there is enough stock for an order detail with this quantity
+        """
+        if self.stock < quantity:
+            return False, f"There is not enough stock to make this order, try with something less or equal to {self.stock}"
+        return True, None
+
+    def update_stock(self, quantity):
+        """
+        Updates stock given a validated order detail
+        """
+        self.stock -= quantity
+        self.save()
 
 class Order(models.Model):
     date_time = models.DateTimeField()
@@ -19,13 +33,3 @@ class OrderDetail(models.Model):
         )
     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='order_details')
 
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            # This code only happens if the objects is
-            # not in the database yet. Otherwise it would
-            # have pk
-            # print(self.product)
-            print("ENTRA NUEVO PK")
-            print(self.product)
-            
-        super(OrderDetail, self).save(*args, **kwargs)
