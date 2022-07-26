@@ -39,12 +39,12 @@ class OrderViewSet(viewsets.ModelViewSet):
                 check_for_duplicate_product_ids(new_order_details, order)
                 order.update_order_details(order_details_to_update)
                 order.add_new_order_details(new_order_details)
-            elif serializer.data['date_time']:
-                order.date_time = serializer.data['date_time']
+            if request.data['date_time']:
+                order.date_time = request.data['date_time']
                 order.save()
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+        serializer = serializers.OrderSerializer(order)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):

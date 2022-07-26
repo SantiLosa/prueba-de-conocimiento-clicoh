@@ -39,7 +39,6 @@ def check_for_duplicate_product_ids(new_order_details, order):
     order_details_with_repeated_product_ids = []
     for order_detail in new_order_details:
         if OrderDetail.objects.filter(order=order,product=order_detail['product']).exists():
-            #Only for updates
             order_details_with_repeated_product_ids.append(order_detail)
 
     if order_details_with_repeated_product_ids:

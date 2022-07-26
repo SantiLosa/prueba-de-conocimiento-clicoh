@@ -22,6 +22,7 @@ class Product(models.Model):
         self.stock -= quantity
         self.save()
 
+
 class Order(models.Model):
     date_time = models.DateTimeField()
 
@@ -40,6 +41,12 @@ class Order(models.Model):
             order_detail.order = self
             order_detail.product.subtract_stock(order_detail.quantity)
             order_detail.save()
+    
+    def get_total(self):
+        total = 0
+        for order_detail in self.order_details.all():
+            total += order_detail.quantity*order_detail.product.price
+        return total
 
 
 class OrderDetail(models.Model):

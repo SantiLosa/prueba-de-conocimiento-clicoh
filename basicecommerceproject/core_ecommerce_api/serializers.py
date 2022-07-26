@@ -4,12 +4,14 @@ from core_ecommerce.models import Product, Order, OrderDetail
 
 
 class ProductSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Product
         fields = '__all__'
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = OrderDetail
         fields = '__all__'
@@ -27,17 +29,19 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     order_details= OrderDetailSerializer(many=True, required=False)
+    total = serializers.SerializerMethodField(required=False, read_only=True)
 
     class Meta:
         model = Order
         fields = '__all__'
+    
+    def get_total(self, obj):
+        return obj.get_total()
 
     def validate(self, data):
         """
         Custom validations for order
         """
-        # print("ENTRA VALIDATE OrderSerializer")
-        # print("ENTRA VALIDATE OrderSerializer")
         if data.get('order_details', None):
             products_values = [order_detail['product'] for order_detail in data['order_details']]
             if check_duplicates_in_list(products_values):
