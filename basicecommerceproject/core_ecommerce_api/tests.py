@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.urls import reverse
+from core_ecommerce_api.helpers import UDSPriceGetter
 from rest_framework import status
 from rest_framework.test import APITestCase, force_authenticate
 from core_ecommerce.models import Order, Product, OrderDetail
@@ -474,3 +475,4 @@ class OrderGetTests(APITestCase):
         print('')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['total'], 31.96)
+        self.assertEqual(response.data['total_usd'], response.data['total']* UDSPriceGetter().get_price_of_dollar())

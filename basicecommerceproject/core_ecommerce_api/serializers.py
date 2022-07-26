@@ -30,6 +30,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     order_details= OrderDetailSerializer(many=True, required=False)
     total = serializers.SerializerMethodField(required=False, read_only=True)
+    total_usd = serializers.SerializerMethodField(required=False, read_only=True)
 
     class Meta:
         model = Order
@@ -37,6 +38,9 @@ class OrderSerializer(serializers.ModelSerializer):
     
     def get_total(self, obj):
         return obj.get_total()
+    
+    def get_total_usd(self, obj):
+        return obj.get_total_usd()
 
     def validate(self, data):
         """

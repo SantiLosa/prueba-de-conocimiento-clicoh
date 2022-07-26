@@ -1,6 +1,7 @@
 from django.db import models
 from rest_framework import serializers
 from django.core.validators import MinValueValidator
+from core_ecommerce_api.helpers import UDSPriceGetter
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
@@ -46,6 +47,12 @@ class Order(models.Model):
         total = 0
         for order_detail in self.order_details.all():
             total += order_detail.quantity*order_detail.product.price
+        return total
+    
+    def get_total_usd(self):
+        total_in_native_currency = self.get_total()
+        usd_blue_value = UDSPriceGetter().get_price_of_dollar()
+        total = total_in_native_currency*usd_blue_value
         return total
 
 
