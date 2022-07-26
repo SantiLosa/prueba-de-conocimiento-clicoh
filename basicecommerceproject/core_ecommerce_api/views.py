@@ -47,6 +47,15 @@ class OrderViewSet(viewsets.ModelViewSet):
         
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def destroy(self, request, *args, **kwargs):
+        try:
+            order_details = self.get_object().order_details.all()
+            for order_detail in order_details:
+                order_detail.product.subtract_stock(-1*order_detail.quantity)
+        except:
+            pass
+        return super(OrderViewSet, self).destroy(request, *args, **kwargs)
+
 
 class OrderDetailViewSet(viewsets.ModelViewSet):
 

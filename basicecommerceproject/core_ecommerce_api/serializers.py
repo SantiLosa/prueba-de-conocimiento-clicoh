@@ -24,9 +24,6 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(error_message)
         return data
 
-    def create(self, validated_data):
-        return super().create(validated_data)
-
 
 class OrderSerializer(serializers.ModelSerializer):
     order_details= OrderDetailSerializer(many=True, required=False)
@@ -57,26 +54,5 @@ class OrderSerializer(serializers.ModelSerializer):
             new_order_detail = OrderDetail.objects.create(order=order, **order_detail_data)
             new_order_detail.product.subtract_stock(new_order_detail.quantity)
         return order
-    
 
-    # def update(self, instance, validated_data):
-    #     print("CALLS UPDATE")
-    #     print(instance)
-    #     print(validated_data)
-    #     order_details_data = validated_data.pop('order_details')
-    #     # order = Order.objects.create(**validated_data)
-    #     for order_detail_data in order_details_data:
-    #         print('ORDER_DETAIL')
-    #         print(order_detail_data['id'])
-    #         asd
-    #         """We now know it's been validated that order details dont have repeated
-    #         products and also there is enough stock to create each order, we now
-    #         create each one and update the stock of each product"""
-    #         # instance.order_details.get[]
-    #         new_order_detail = OrderDetail.objects.create(order=order, **order_detail_data)
-    #         new_order_detail.product.update_stock(new_order_detail.quantity)
-    #     return order
-    
-
-        # return super().create(validated_data)
     
