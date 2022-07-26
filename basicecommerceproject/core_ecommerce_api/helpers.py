@@ -33,7 +33,7 @@ class UDSPriceGetter:
                             c.write(f"{date}\n")
                             c.write(blue_value)
                         break
-            except:
-                print("conection failed, using outdated blue value")
+            except Exception as e:
+                print(e)
                 pass
         return float(blue_value.replace(',','.'))
