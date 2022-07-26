@@ -17,12 +17,12 @@ class UDSPriceGetter:
             lines = c.readlines()
             if not lines:
                 return False
-            if check_age_of_data(lines[0].strip(), self.refresh_cache_time_in_minutes):
-                return lines[1].strip()
+            updated = check_age_of_data(lines[0].strip(), self.refresh_cache_time_in_minutes):
+            return updated, lines[1].strip()
 
     def get_price_of_dollar(self):
-        blue_value = self.get_cached_price_of_blue()
-        if not blue_value:
+        updated, blue_value = self.get_cached_price_of_blue()
+        if not updated:
             try:
                 response = requests.get(self.url).json()
                 for dolar_type in response:
