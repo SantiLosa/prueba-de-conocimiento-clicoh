@@ -17,7 +17,7 @@ class UDSPriceGetter:
             lines = c.readlines()
             if not lines:
                 return False
-            updated = check_age_of_data(lines[0].strip(), self.refresh_cache_time_in_minutes):
+            updated = check_age_of_data(lines[0].strip(), self.refresh_cache_time_in_minutes)
             return updated, lines[1].strip()
 
     def get_price_of_dollar(self):
