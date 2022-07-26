@@ -1,5 +1,6 @@
-from core_ecommerce.models import Product, Order, OrderDetail
+from time import time
 from rest_framework import serializers
+from datetime import datetime, timedelta
 
 def check_duplicates_in_list(list):
     set_list = set()
@@ -12,6 +13,7 @@ def check_duplicates_in_list(list):
 
 
 def validate_order_detail_ids_and_get_existing_ones(request_data):
+    from core_ecommerce.models import OrderDetail
     """ Matches order details in request against the ones that exist in the database,
     if they have an id field sent in the request, THEY MUST EXIST """
     order_details = [order_detail for order_detail in request_data['order_details']]
@@ -33,8 +35,8 @@ def validate_order_detail_ids_and_get_existing_ones(request_data):
     
     return order_details_to_update, new_order_details
 
-
 def check_for_duplicate_product_ids(new_order_details, order):
+    from core_ecommerce.models import OrderDetail
     """ Validates patch request data against current products id in the current order being edited """
     order_details_with_repeated_product_ids = []
     for order_detail in new_order_details:
@@ -43,3 +45,10 @@ def check_for_duplicate_product_ids(new_order_details, order):
 
     if order_details_with_repeated_product_ids:
         raise serializers.ValidationError(f'This order already has a product with theese product ids: {order_details_with_repeated_product_ids}')
+
+def check_age_of_data(date_string, threshhold_in_minutes):
+    """ date_string must have format m/d/Y, H:M:S'"""
+    cache_time = datetime.strptime(date_string, "%m/%d/%Y, %H:%M:%S")
+    now = datetime.now()
+    difference_in_mins = (now -cache_time)/timedelta(minutes=1)
+    return difference_in_mins < threshhold_in_minutes
