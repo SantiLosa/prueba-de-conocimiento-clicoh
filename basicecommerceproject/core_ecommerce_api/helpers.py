@@ -19,13 +19,16 @@ class UDSPriceGetter:
     def get_price_of_dollar(self):
         blue_value = self.get_cached_price_of_blue()
         if not blue_value:
-            response = requests.get(self.url).json()
-            for dolar_type in response:
-                if dolar_type['casa']['nombre'] == self.usd_type:
-                    blue_value = dolar_type['casa']['venta']
-                    date = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-                    with open('core_ecommerce_api/cache_files/price_cache.txt', 'w') as c:
-                        c.write(f"{date}\n")
-                        c.write(blue_value)
-                    break
+            try:
+                response = requests.get(self.url).json()
+                for dolar_type in response:
+                    if dolar_type['casa']['nombre'] == self.usd_type:
+                        blue_value = dolar_type['casa']['venta']
+                        date = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+                        with open('core_ecommerce_api/cache_files/price_cache.txt', 'w') as c:
+                            c.write(f"{date}\n")
+                            c.write(blue_value)
+                        break
+            except:
+                pass
         return float(blue_value.replace(',','.'))
